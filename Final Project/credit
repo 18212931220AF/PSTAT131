@@ -1,1 +1,4 @@
-
+This project is use R language to analyze the credit risk. 
+The goal is to identify the best-performing model and assess its effectiveness in predicting credit risk accurately.
+I explored the German Credit dataset and built 7 models to classify the good and bad risks.
+This project has been a valuable exercise in applying machine learning techniques to a real-world dataset.

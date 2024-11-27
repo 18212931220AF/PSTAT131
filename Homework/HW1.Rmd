@@ -1,0 +1,98 @@
+---
+title: "PSTAT131 HW1"
+author: "Yanru Fang"
+date: "2024-01-16"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 1
+Supervised learning: For each observation of the predictor measurement(s) $x_i$, i = 1, . . . , n there is an associated response measurement $y_i$. We wish to fit a model that relates the response to the predictors, with the aim of accurately predicting the response for future observations (prediction) or better understanding the relationship between the response and the predictors (inference). In supervised learning, the actual data Y is the supervisor. (From page 26 of book)\
+\
+Unsupervised learning: Describes the somewhat more challenging situation in which for every observation i = 1,...,n, we observe a vector of measurements $x_i$ but no associated response $y_i$. It is not possible to fit a linear regression model, since there is no response variable to predict. (From page 26 of book)\
+\
+Difference: For the supervised learning, the purpose is to understanding the relationship between the response and the predictors. For the unsupervised learning, we seek to understand the relationships between the variables or between the observations. Moreover, In the supervised learning, the actual observed value are known. However, in the unsupervised learning, the data sets are without actual observations. (From page 26 of book)\
+
+### Question 2
+We tend to refer to problems with a quantitative response as regression problems, while those involving a qualitative response are often referred to as classification problems. (From page 28 of book) For regression models, Y is quantitative, which is numerical values. However, for classification model, Y is qualitative, which is categorical values. (From lecture slides no.42)\
+
+### Question 3
+Mean squared error and root mean squared error are two commonly used metrics for regression ML problems.
+Accuracy and error rate are two commonly used metrics for classification ML problems. (From the lecture 43 slides)\
+
+### Question 4
+Descriptive models: Choose model to best visually emphasize a trend in data.\
+Inferential models: Aim is to test theories. State relationship between outcome and predictor. Interest is often in significance tests and implications for theories.\
+Predictive models: Aim is to predict Y with minimum reducible error. Not focused on hypothesis tests.\
+(From the lecture 49 slides)
+
+### Question 5 
+Mechanistic models make specific assumptions about how predictors relate to outcomes. It won't match true unknown f. These models usually exhibit higher bias and lower variance. For empirically-driven models, there is no or few assumptions about f. It require a larger number of observations. Also, It much more flexible by default and can also overfit. These models usually exhibit higher variance and lower bias. (From the lecture 49 slides)\
+\
+I think mechanistic models is easier to understand than empirically-driven. Since the mechanistic is generally fit relatively simple parameteric forms.\
+\
+Mechanistic have higher bias and lower variance; Empirically-driven have higher variance and lower bias.\
+
+### Question 6
+The first question is predictive; The reason is it focused on get the vote probability. \
+The second question is inferential; The reason is it focused more about the relationship between a predictor and outcome, which are candidate interaction and voter behavior.
+\
+
+### Exercise 1
+```{r include=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r echo=TRUE}
+ggplot(mpg, aes(x = hwy)) + geom_histogram(binwidth = 0.5) + 
+  labs(x = 'Highway MPG', y = 'Counts of cars')
+```
+From the histogram we can see that there is only few cars having more than 40 MPG or less than 10 MPG. This is binomial distribution, where two peaks are at around 17 MPG and around 26 MPG.\
+
+### Exercise 2
+```{r echo=TRUE}
+ggplot(mpg, aes(x = hwy, y = cty)) + geom_point(aes(color = manufacturer)) + 
+  labs(x = 'Highway MPG', y = 'City MPG')
+```
+From the scatterplot we can see that as Highway MPG increase, the City MPG also increase. Thus, this is quite normal distribution between hwy and cty.\
+
+### Exercise 3
+```{r}
+mpg_data <- mpg
+mpg_data %>% 
+  count(manufacturer) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x = n, y = fct_reorder(manufacturer, n))) + 
+  geom_bar(stat = 'identity', fill = 'pink') + 
+  labs(x = 'Number of Cars', y = 'Manufacturer') + 
+  theme_minimal()
+```
+From the chart, we can see that the manufacturer Dodge produced the most cars, and the manufacturer Lincoln produced the fewest cars.\
+
+### Exercise 4
+```{r echo=TRUE}
+ggplot(mpg, aes(factor(cyl), hwy)) + 
+  geom_boxplot() + 
+  geom_jitter(alpha = 0.5) + 
+  labs(title = 'Boxplot of Highway MPG by Cylinders',
+       x = 'Number of Cylinders',
+       y = 'Highway MPG')
+```
+In this graph we find when number of cylinders increase, the highway MPG is decreasing. Also, on the average, the cars that have four cylinders have the highest MPG, and the cars that have eight cylinders have the lowest MPG.\
+
+### Exercise 5
+```{r echo=TRUE}
+library(corrplot)
+mpg  %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  corrplot(type = 'lower', diag = FALSE, 
+           method = 'number', bg = 'pink')
+```
+From the chart we know that the year and displ, cyl and displ, cyl and year, cty and hwy are positive correlated. These make sense to me because as the city MPG is high, the highway MPG also tend to be high. 
+Also, the car with larger engines are likely have more cylinders. Newer cars may tend to have more cylinders.\
+And cty and displ, hwy and displ, cty and year, cty and cyl, hwy and cyl are negative correlated. These also make sense to me since the car with larger engine or more cylinders often consume more fuel, leading the lower city MPG and highway MPG.\ 
